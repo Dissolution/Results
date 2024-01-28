@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- Multi Target -->
+        <TargetFrameworks>
+            <!-- All supported Core versions as per https://versionsof.net/ -->
+            net8.0;net7.0;net6.0;
+            <!-- The latest Framework -->
+            net48;
+            <!-- Both Standard versions (source generators are stuck on .Net Standard 2.0 -->
+            netstandard2.1; netstandard2.0;
+        </TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+        <AssemblyName>ScrubJay.Results</AssemblyName>
+        <RootNamespace>ScrubJay.Results</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Make PolySharp's implementations public -->
+        <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
+    </PropertyGroup>
+    
+    <!-- NuGet Packages -->
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'netstandard2.0' ">
+        <PackageReference Include="System.Memory" Version="4.5.5"/>
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="PolySharp" Version="1.13.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>    
+
+    <!-- Global Usings -->
+    <ItemGroup>
+        <Using Remove="System.Net.Http"/>
+        <Using Include="System.Runtime.CompilerServices"/>
+        <Using Include="System.Diagnostics.CodeAnalysis"/>
+        <Using Include="System.Collections"/>
+        <Using Include="System.Numerics"/>
+    </ItemGroup>
+</Project>
