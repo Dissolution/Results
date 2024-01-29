@@ -12,12 +12,6 @@ namespace ScrubJay.Results;
 /// <see cref="Result{T}"/> is for the concept of an Ok with Value or an Error with Exception
 /// </remarks>
 public readonly struct Result :
-#if NET7_0_OR_GREATER
-    IEqualityOperators<Result, Result, bool>,
-    //IEqualityOperators<Result, bool, bool>,
-    IBitwiseOperators<Result, Result, Result>,
-    //IBitwiseOperators<Result, bool, Result>,
-#endif
     IEquatable<Result>,
     IEquatable<bool>
 {
@@ -28,124 +22,7 @@ public readonly struct Result :
     public static bool operator true(Result result) => result._ok;
     public static bool operator false(Result result) => !result._ok;
     public static bool operator !(Result result) => !result._ok;
-    [Obsolete("Cannot compute the ones-complement (~) of a Result", true)]
-    public static Result operator ~(Result _) => throw new NotSupportedException("Cannot compute the ones-complement (~) of a Result");
-
-    
-    public static bool operator ==(Result left, Result right) => left.Equals(right);
-//    public static bool operator ==(Result result, bool isOk) => result.Equals(isOk);
-//    public static bool operator ==(bool isOk, Result result) => result.Equals(isOk);
-
-    public static bool operator !=(Result left, Result right) => !left.Equals(right);
-//    public static bool operator !=(Result result, bool isOk) => !result.Equals(isOk);
-//    public static bool operator !=(bool isOk, Result result) => !result.Equals(isOk);
-
-
-    public static Result operator |(Result left, Result right)
-    {
-        if (left._ok || right._ok) return _okResult;
-        return Errors(left._exception, right._exception);
-    }
-//    public static Result operator |(Result result, bool isOk)
-//    {
-//        if (result._ok || isOk) return _okResult;
-//        return Error(result._exception);
-//    }
-//    public static Result operator |(bool isOk, Result result)
-//    {
-//        if (result._ok || isOk) return _okResult;
-//        return Error(result._exception);
-//    }
-        
-
-    public static Result operator &(Result left, Result right)
-    {
-        if (left._ok && right._ok) return _okResult;
-        return Errors(left._exception, right._exception);
-    }
-//    public static Result operator &(Result result, bool isOk)
-//    {
-//        if (result._ok && isOk) return _okResult;
-//        return Error(result._exception);
-//    }
-//    public static Result operator &(bool isOk, Result result)
-//    {
-//        if (result._ok && isOk) return _okResult;
-//        return Error(result._exception);
-//    }
-    
-    
-    public static Result operator ^(Result left, Result right)
-    {
-        if (left._ok)
-        {
-            if (right._ok)
-            {
-                // both are true
-                return Errors();
-            }
-
-            // only left is true
-            return _okResult;
-        }
-
-        if (right._ok)
-        {
-            // only right is true
-            return _okResult;
-        }
-
-        // both are false
-        return Errors(left._exception, right._exception);
-    }
-//    public static Result operator ^(Result result, bool isOk)
-//    {
-//        if (result._ok)
-//        {
-//            if (isOk)
-//            {
-//                // both are true
-//                return Errors();
-//            }
-//
-//            // only left is true
-//            return _okResult;
-//        }
-//
-//        if (isOk)
-//        {
-//            // only right is true
-//            return _okResult;
-//        }
-//
-//        // both are false
-//        return Error(result._exception);
-//    }
-//    public static Result operator ^(bool isOk, Result result)
-//    {
-//        if (result._ok)
-//        {
-//            if (isOk)
-//            {
-//                // both are true
-//                return Errors();
-//            }
-//
-//            // only left is true
-//            return _okResult;
-//        }
-//
-//        if (isOk)
-//        {
-//            // only right is true
-//            return _okResult;
-//        }
-//
-//        // both are false
-//        return Error(result._exception);
-//    }
-    
-    
+  
     private static readonly Result _okResult = new Result(true, null);
     
     /// <summary>
@@ -161,7 +38,7 @@ public readonly struct Result :
     /// An optional <see cref="Exception"/> with additional information related to the failure
     /// </param>
     /// <returns><c>Result.Error(</c><see cref="Exception"/><c>)</c></returns>
-    public static Result Error(Exception? exception)
+    public static Result Error(Exception exception)
     {
         return new(false, exception);
     }
@@ -343,7 +220,7 @@ public readonly struct Result :
         }
     }
 
-    /// <summary>
+/*    /// <summary>
     /// Returns a <see cref="Result{TValue}"/> that is this <see cref="Result"/> with an attached <paramref name="value"/> if it is <see cref="Ok"/>
     /// </summary>
     /// <typeparam name="TValue">
@@ -359,7 +236,7 @@ public readonly struct Result :
     public Result<TValue> WithValue<TValue>(TValue value)
     {
         return new Result<TValue>(_ok, value, _exception);
-    }
+    }*/
     
     /// <summary>
     /// Indicates if this <see cref="Result"/> and the given <paramref name="result"/> are both <c>Ok</c> or <c>Error</c>

@@ -92,7 +92,7 @@ public class ResultTests
     [MemberData(nameof(MemberData))]
     public void FalseOperator(Result result)
     {
-        if (result)
+        if (!result)
         {
             Assert.False(result.IsOk());
         }
@@ -112,129 +112,8 @@ public class ResultTests
         Assert.Equal(not, result.IsError());
         Assert.NotEqual(not, result.IsOk());
     }
-
-    [Theory]
-    [MemberData(nameof(MemberData))]
-    [Obsolete("ignore", false)]
-    public void BitwiseNegate(Result result)
-    {
-        Assert.Throws<NotSupportedException>(() => ~result);
-    }
     
     #endregion
-    #region binary
-    
-    [Theory]
-    [MemberData(nameof(MemberDataPair))]
-    public void EqualResultOp(Result first, Result second)
-    {
-        var eqOp = first == second;
-        var eqMeth = first.Equals(second);
-        Assert.Equal(eqOp, eqMeth);
-        if (eqOp)
-        {
-            Assert.Equal(first.IsOk(), second.IsOk());
-        }
-        else
-        {
-            Assert.NotEqual(first.IsOk(), second.IsOk());
-        }
-    }
-    
-    [Theory]
-    [MemberData(nameof(MemberData))]
-    public void EqualBoolOp(Result result)
-    {
-        var opEqualResultBool = result == true;
-        var opEqualBoolResult = true == result;
-        Assert.Equal(opEqualResultBool, opEqualBoolResult);
-        Assert.Equal(opEqualResultBool, result.IsOk());
-    }
-    
-    [Theory]
-    [MemberData(nameof(MemberDataPair))]
-    public void NotEqualOp(Result first, Result second)
-    {
-        var eqOp = first != second;
-        var eqMeth = !first.Equals(second);
-        Assert.Equal(eqOp, eqMeth);
-        if (eqOp)
-        {
-            Assert.NotEqual(first.IsOk(), second.IsOk());
-        }
-        else
-        {
-            Assert.Equal(first.IsOk(), second.IsOk());
-        }
-    }
-    
-    [Theory]
-    [MemberData(nameof(MemberData))]
-    public void NotEqualBoolOp(Result result)
-    {
-        var opEqualResultBool = result != true;
-        var opEqualBoolResult = true != result;
-        Assert.Equal(opEqualResultBool, opEqualBoolResult);
-        Assert.Equal(opEqualResultBool, result.IsError());
-    }
-
-    [Theory]
-    [MemberData(nameof(MemberDataPair))]
-    public void ResultBitwiseOr(Result left, Result right)
-    {
-        var resultOr = left | right;
-        Assert.IsType<Result>(resultOr);
-        bool boolOr = ((bool)left) | ((bool)right);
-        Assert.Equal(boolOr, resultOr.IsOk());
-
-        var resultShortOr = left || right;
-        Assert.IsType<Result>(resultShortOr);
-        bool boolShortOr = ((bool)left) || ((bool)right);
-        Assert.Equal(boolShortOr, resultShortOr.IsOk());
-    }
-    
-    [Theory]
-    [MemberData(nameof(MemberData))]
-    public void BoolBitwiseOr(Result result)
-    {
-        var resultOr = result | true;
-        Assert.IsType<Result>(resultOr);
-        bool boolOr = ((bool)result) | ((bool)true);
-        Assert.Equal(boolOr, resultOr.IsOk());
-
-        var resultShortOr = true || result;
-        Assert.IsType<Result>(resultShortOr);
-        bool boolShortOr = ((bool)left) || ((bool)right);
-        Assert.Equal(boolShortOr, resultShortOr.IsOk());
-    }
-
-    [Theory]
-    [MemberData(nameof(MemberDataPair))]
-    public void BitwiseAnd(Result left, Result right)
-    {
-        var resultAnd = left & right;
-        Assert.IsType<Result>(resultAnd);
-        bool boolAnd = ((bool)left) & ((bool)right);
-        Assert.Equal(boolAnd, resultAnd.IsOk());
-
-        var resultShortAnd = left && right;
-        Assert.IsType<Result>(resultShortAnd);
-        bool boolShortAnd = ((bool)left) && ((bool)right);
-        Assert.Equal(boolShortAnd, resultShortAnd.IsOk());
-    }
-
-    [Theory]
-    [MemberData(nameof(MemberDataPair))]
-    public void BitwiseXor(Result left, Result right)
-    {
-        var resultXor = left ^ right;
-        Assert.IsType<Result>(resultXor);
-        bool boolXor = ((bool)left) ^ ((bool)right);
-        Assert.Equal(boolXor, resultXor.IsOk());
-    }
-
-#endregion
-
 #endregion
 
     [Fact]
